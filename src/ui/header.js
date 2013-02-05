@@ -10,7 +10,6 @@ define([ "dialog/dialog", "util/lang", "text!layouts/header.html", "ui/user-data
     var _this = this,
         _userData = new UserData( butter, options ),
         _rootElement = Lang.domFragment( HEADER_TEMPLATE, ".butter-header" ),
-        _webmakerNavBar = _rootElement.querySelector( "#webmaker-nav" ),
         _saveButton = _rootElement.querySelector( ".butter-save-btn" ),
         _projectTitle = _rootElement.querySelector( ".butter-project-title" ),
         _projectName = _projectTitle.querySelector( ".butter-project-name" ),
@@ -20,10 +19,8 @@ define([ "dialog/dialog", "util/lang", "text!layouts/header.html", "ui/user-data
         _projectMenu = _rootElement.querySelector( ".butter-project-menu" ),
         _projectMenuControl = _rootElement.querySelector( ".butter-project-menu-control" ),
         _projectMenuList = _projectMenu.querySelector( ".butter-btn-menu" ),
-        _tabzilla = _rootElement.querySelector( "#tabzilla" ),
         _noProjectNameToolTip,
         _projectTitlePlaceHolderText = _projectName.innerHTML,
-        _webmakerNav,
         _toolTip;
 
     // create a tooltip for the plrojectName element
@@ -38,24 +35,21 @@ define([ "dialog/dialog", "util/lang", "text!layouts/header.html", "ui/user-data
 
     ToolTip.apply( _projectTitle );
 
-    _tabzilla.addEventListener( "click", function() {
-      document.body.classList.toggle( "tabzilla-open" );
-    }, false );
-
     function saveProject() {
-      if ( !butter.cornfield.authenticated() ) {
-        _userData.authenticationRequired();
-      }
-      else if ( butter.project.isSaved ) {
-        return;
-      }
-      else if ( checkProjectName( butter.project.name ) ) {
-        _userData.authenticationRequired( prepare, nameError );
-        return;
-      }
-      else {
-        nameError();
-      }
+        prepare();
+//      if ( !butter.cornfield.authenticated() ) {
+//        _userData.authenticationRequired();
+//      }
+//      else if ( butter.project.isSaved ) {
+//        return;
+//      }
+//      else if ( checkProjectName( butter.project.name ) ) {
+//        _userData.authenticationRequired( prepare, nameError );
+//        return;
+//      }
+//      else {
+//        nameError();
+//      }
     }
 
     function openShareEditor() {
@@ -145,7 +139,9 @@ define([ "dialog/dialog", "util/lang", "text!layouts/header.html", "ui/user-data
         toggleShareButton( true );
       },
       login: function() {
-        var isSaved = butter.project.isSaved;
+        if (butter.project != null) {
+          var isSaved = butter.project.isSaved;
+        }
 
         _previewBtn.style.display = "";
         _projectTitle.style.display = "";
@@ -201,21 +197,14 @@ define([ "dialog/dialog", "util/lang", "text!layouts/header.html", "ui/user-data
       dialog.open();
     }
 
-    _webmakerNav = new WebmakerBar({
-      container: _webmakerNavBar,
-      onLogin: _userData.authenticationRequired,
-      onLogout: _userData.logout,
-      feedbackCallback: feedbackCallback
-    });
-
 
     function onLogin() {
-      _webmakerNav.views.login( butter.cornfield.username() );
+      //_webmakerNav.views.login( butter.cornfield.username() );
     }
 
     butter.listen( "autologinsucceeded", onLogin, false );
     butter.listen( "authenticated", onLogin, false );
-    butter.listen( "logout", _webmakerNav.views.logout, false );
+    //butter.listen( "logout", _webmakerNav.views.logout, false );
 
     function destroyToolTip() {
       if ( _noProjectNameToolTip && !_noProjectNameToolTip.destroyed ) {
@@ -324,6 +313,10 @@ define([ "dialog/dialog", "util/lang", "text!layouts/header.html", "ui/user-data
         _projectName.textContent = butter.project.name;
       }
     });
+
+
+    // Logging in using demo user.
+    _this.views.login( "Omer" );
 
   };
 });
