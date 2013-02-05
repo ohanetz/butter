@@ -9,10 +9,13 @@ var utils,
 utils = {
   generateDataURIPair: function() {
     var filename = uuid.v4();
+    var url = ( stores.images.hostname || CONSTANTS.EMBED_HOSTNAME ) +
+        '/' + stores.images.expand( filename );
+//    console.log("Filename: " + filename);
+//    console.log("Url: " + url);
     return {
       filename: filename,
-      url: ( stores.images.hostname || CONSTANTS.EMBED_HOSTNAME ) +
-        '/' + stores.images.expand( filename )
+      url: url
     };
   },
   generatePublishUrl: function( id ) {

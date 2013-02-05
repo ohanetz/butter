@@ -31,7 +31,9 @@ var BaseFileStore = {
   expand: function( name ) {
     // Make sure name is a string, since non-strings are ignored by join
     name = name + '';
-    return Path.join( this.namePrefix, name ) + this.nameSuffix;
+    //return Path.join( this.namePrefix, name ) + this.nameSuffix;
+    return (Path.join( this.namePrefix, name ) + this.nameSuffix)
+        .replace("\\", "/");
   }
 };
 
