@@ -37,7 +37,13 @@ var path = require( "path" ),
     VERSIONS_CONFIG = join( CORNFIELD_DIR, 'config', 'versions.json' ),
 
     // Global var for exit code
-    passed = true;
+    passed = true,
+
+    // Executable Locations
+    GIT_EXE = 'tgit',
+    TAR_EXE = '"%PROGRAMFILES%\\7-Zip\\7z.exe" a -ttar',
+    BZ2_EXE = '"%PROGRAMFILES%\\7-Zip\\7z.exe" a -tbzip2'
+    ;
 
 require('shelljs/make');
 
@@ -45,7 +51,7 @@ require('shelljs/make');
 function gitDescribe( repoRoot ) {
   var cwd = pwd();
   cd( repoRoot );
-  var version = exec( 'git describe',
+  var version = exec( GIT_EXE + ' describe',
                       { silent: true } ).output.replace( /\r?\n/m, '' );
   cd( cwd );
   return version;
@@ -412,25 +418,40 @@ target.css = function() {
 };
 
 function buildJS( version, compress ){
+
+  echo( "" );
+  echo( "# Compiling JS Files" );
+
   var doCompress = compress ? "" : "optimize=none";
   var result = "";
 
+
+  echo( "## butter.js" );
   result = exec(RJS + ' -o tools/build.js ' + doCompress, {silent: true});
   if (!!result.code) {
     echo(result.output);
   }
   stampVersion( version, 'dist/src/butter.js' );
+  echo( "## Result:" + result.output );
 
+
+  echo( "" );
+  echo( "## embed.js" );
   result = exec(RJS + ' -o tools/embed.js ' + doCompress, {silent: true});
   if (!!result.code) {
     echo(result.output);
   }
   stampVersion( version, 'dist/src/embed.js' );
+  echo( "## Result:" + result.output );
 
+
+  echo( "" );
+  echo( "## webmakernav.js" );
   result = exec(RJS + ' -o tools/webmakernav.js ' + doCompress, {silent: true});
   if (!!result.code) {
     echo(result.output);
   }
+  echo( "## Result:" + result.output );
 }
 
 target.server = function() {
@@ -460,55 +481,85 @@ target.server = function() {
 };
 
 function butteredPopcorn() {
+
+  echo( "" );
+  echo( "# Building Buttered Popcorn" );
+  
   var defaultConfig = require( DEFAULT_CONFIG ),
       popcornDir = defaultConfig.dirs['popcorn-js'].replace( '{{baseDir}}', './' ),
       popcornFiles = [];
 
   // Popcorn License Header
+  echo( "## Popcorn License Header" );
   popcornFiles.push( popcornDir + '/LICENSE_HEADER' );
 
   // classList shim
+  echo( "## Popcorn classList shim" );
   popcornFiles.push( './tools/classlist-shim.js' );
 
   // popcorn IE8 shim
+  echo( "## Popcorn IE8 shim" );
   popcornFiles.push( popcornDir + '/ie8/popcorn.ie8.js' );
 
   // popcorn.js
+  echo( "## popcorn.js" );
   popcornFiles.push( popcornDir + '/popcorn.js' );
 
   // plugins
   if ( defaultConfig.plugin && defaultConfig.plugin.plugins ) {
+    var numberOfPlugins = defaultConfig.plugin.plugins.length;
+    var i = 1;
+    echo( "## Plugins (" +  numberOfPlugins + ")");
     defaultConfig.plugin.plugins.forEach( function( plugin ){
+      echo( "### Plugin " + i + " of " + numberOfPlugins );
       popcornFiles.push( plugin.path.replace( '{{baseDir}}', './' ) );
+      i++;
     });
   }
 
   // wrapper base prototype
+  echo( "## wrapper base prototype" );
   popcornFiles.push( popcornDir + '/wrappers/common/popcorn._MediaElementProto.js' );
 
   // wrappers
   if ( defaultConfig.wrapper && defaultConfig.wrapper.wrappers ) {
+    var numberOfWrappers = defaultConfig.wrapper.wrappers.length;
+    var i = 1;
+    echo( "## Wrappers (" +  numberOfWrappers + ")");
     defaultConfig.wrapper.wrappers.forEach( function( wrapper ){
+      echo( "### Wrapper " + i + " of " + numberOfWrappers );
       popcornFiles.push( wrapper.path.replace( '{{baseDir}}', './' ) );
+      i++;
     });
   }
 
   // module for baseplayer
+  echo( "## baseplayer" );
   popcornFiles.push( popcornDir + '/modules/player/popcorn.player.js' );
 
   // players
   if ( defaultConfig.player && defaultConfig.player.players ) {
+    var numberOfPlayers = defaultConfig.player.players.length;
+    var i = 1;
+    echo( "## Players (" +  numberOfPlayers + ")");
     defaultConfig.player.players.forEach( function( player ){
+      echo( "### Player " + i + " of " + numberOfPlayers );
       popcornFiles.push( player.path.replace( '{{baseDir}}', './' ) );
+      i++;
     });
   }
 
   // Stamp Popcorn.version with the git commit sha we are using
+  echo( "## Popcorn Version" );
   var popcornVersion = gitDescribe( popcornDir );
 
   // Write out dist/buttered-popcorn.js
+  echo( "## buttered-popcorn.js" );
   cat( popcornFiles ).to( BUTTERED_POPCORN );
+  echo( "### sed buttered-popcorn.js" );
   sed('-i', /@VERSION/g, popcornVersion, BUTTERED_POPCORN);
+
+  echo( "# Done Building Buttered Popcorn" );
 }
 
 target.deploy = function(){
@@ -525,6 +576,8 @@ target.deploy = function(){
   buildJS( version, compress );
   butteredPopcorn();
 
+  echo( "" );
+  echo( "# Copying Files" );
   // We'll mirror src/butter.js and src/embed.js to mimic exploded install
   mkdir('-p', './dist/src');
 
@@ -564,9 +617,14 @@ target.deploy = function(){
   gitDescribe( '.' ).to('dist/public/rev.txt');
 
   // Create a tar archive
-  var tarName = 'butter-' + rpmVersion + '.tar.bz2';
-  exec( 'tar -cjf "' + tarName + '" dist' );
-  mv( tarName, 'dist' );
+  echo( "# Creating TAR Archive" );
+  var tarName = 'butter-' + rpmVersion + '.tar';
+  var bz2Name = tarName + '.bz2';
+  //exec( 'tar -cjf "' + tarName + '" dist' );
+  exec( TAR_EXE + ' "' + tarName + '" dist' );
+  exec( BZ2_EXE + ' "' + bz2Name + '" ' + tarName );
+  rm( tarName );
+  mv( bz2Name, 'dist' );
 
   // It's important to use the production config
   echo( 'Run cornfield with `NODE_ENV=production node app.js`' );
