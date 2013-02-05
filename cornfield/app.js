@@ -123,6 +123,11 @@ app.post( '/api/publish/:id',
 
   var email = req.session.email,
       id = parseInt( req.params.id, 10 );
+      
+    if (!email) {
+        // OMER: Default Email for DEV
+        email = "o.hanetz@gmail.com";
+    }
 
   if ( isNaN( id ) ) {
     res.json( { error: "ID was not a number" }, 500 );
@@ -301,8 +306,10 @@ app.get( '/dashboard', filter.isStorageAvailable, function( req, res ) {
   var email = req.session.email;
 
   if ( !email ) {
-    res.render( 'dashboard-unauthorized.jade' );
-    return;
+    // OMER: Default Email for DEV
+    email = "o.hanetz@gmail.com"
+    //res.render( 'dashboard-unauthorized.jade' );
+    //return;
   }
 
   User.findAllProjects( email, function( err, docs ) {

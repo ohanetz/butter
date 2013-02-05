@@ -10,6 +10,10 @@ module.exports = function routesCtor( app, User, filter, sanitizer, stores, util
 
   app.get( '/api/whoami', function( req, res ) {
     var email = req.session.email;
+    if (!email) {
+        // OMER: Default Email for DEV
+        email = "o.hanetz@gmail.com";
+    }
 
     if (email) {
       res.json({
@@ -31,7 +35,13 @@ module.exports = function routesCtor( app, User, filter, sanitizer, stores, util
     filter.isLoggedIn, filter.isStorageAvailable,
     function( req, res ) {
 
-    User.findProject( req.session.email, req.params.id, function( err, doc ) {
+    var email = req.session.email;
+    if (!email) {
+        // OMER: Default Email for DEV
+        email = "o.hanetz@gmail.com";
+    }
+    
+    User.findProject( email, req.params.id, function( err, doc ) {
       if ( err ) {
         res.json( { error: err }, 500 );
         return;
@@ -65,8 +75,14 @@ module.exports = function routesCtor( app, User, filter, sanitizer, stores, util
       res.json( { error: "ID was not a number" }, 500 );
       return;
     }
+    
+    var email = req.session.email;
+    if (!email) {
+        // OMER: Default Email for DEV
+        email = "o.hanetz@gmail.com";
+    }
 
-    User.deleteProject( req.session.email, req.params.id, function( err, imagesToDestroy ) {
+    User.deleteProject( email, req.params.id, function( err, imagesToDestroy ) {
       if ( err ) {
         res.json( { error: 'project not found' }, 404 );
         return;
@@ -109,11 +125,17 @@ module.exports = function routesCtor( app, User, filter, sanitizer, stores, util
     var files;
 
     var projectData = req.body;
+    
+    var email = req.session.email;
+    if (!email) {
+        // OMER: Default Email for DEV
+        email = "o.hanetz@gmail.com";
+    }
 
     if ( req.body.id ) {
       files = datauri.filterProjectDataURIs( projectData.data, utils.generateDataURIPair );
 
-      User.updateProject( req.session.email, req.body.id, projectData, function( err, doc, imagesToDestroy ) {
+      User.updateProject( email, req.body.id, projectData, function( err, doc, imagesToDestroy ) {
         if ( err ) {
           res.json( { error: err }, 500 );
           return;
@@ -142,7 +164,7 @@ module.exports = function routesCtor( app, User, filter, sanitizer, stores, util
     } else {
       files = datauri.filterProjectDataURIs( projectData.data, utils.generateDataURIPair );
 
-      User.createProject( req.session.email, projectData, function( err, doc ) {
+      User.createProject( email, projectData, function( err, doc ) {
         if ( err ) {
           res.json( { error: err }, 500 );
           return;

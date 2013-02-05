@@ -4,7 +4,13 @@ var dbCheckFn, filters;
 
 filters = {
   isLoggedIn: function( req, res, next ) {
-    if ( req.session.email ) {
+    var email = req.session.email;
+    if (!email) {
+        // OMER: Default Email for DEV
+        email = "o.hanetz@gmail.com";
+    }
+    
+    if ( email ) {
       next();
     } else {
       res.json({
