@@ -265,13 +265,17 @@ app.post( '/api/publish/:id',
 
       function publishEmbedShell() {
         // Write out embed shell HTML
+        var templateRelativeUrl = templateConfigs[ project.template ].template;
+        var returnUrl = APP_HOSTNAME + "/" + path.relative( WWW_ROOT, templateRelativeUrl ).replace(/\\/g, "/") +
+            "?savedDataUrl=/api/project/" + project.id;
         writeEmbedShell( idBase36, publishUrl,
                          {
                            author: project.author,
                            projectName: project.name,
                            embedShellSrc: publishUrl,
                            embedSrc: iframeUrl,
-                           baseHref: APP_HOSTNAME
+                           baseHref: APP_HOSTNAME,
+                           returnUrl: returnUrl
                          },
                          finished );
       }
