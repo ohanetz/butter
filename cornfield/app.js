@@ -197,7 +197,7 @@ app.post( '/api/publish/:id',
 
       externalAssetsString += '\n';
       for ( i = 0; i < EXPORT_ASSETS.length; ++i ) {
-        externalAssetsString += '  <script src="' + path.relative( path.dirname( templateFile ), EXPORT_ASSETS[ i ] ) + '"></script>\n';
+        externalAssetsString += '  <script src="' + path.relative( path.dirname( templateFile ), EXPORT_ASSETS[ i ] ).replace(/\\/g, "/") + '"></script>\n';
       }
 
       // If the template has custom plugins defined in it's config, add them to our exported page
