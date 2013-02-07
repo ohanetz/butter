@@ -1,7 +1,7 @@
 {
   "server" : {
     "bindIP" : "localhost",
-    "bindPort" : "8888"
+    "bindPort" : "7777"
   },
   "logger" : {
     "format" : "dev"
@@ -16,7 +16,7 @@
   "dirs": {
     "wwwRoot": "../",
     "templates": "../templates",
-    "appHostname": "http://localhost:8888"
+    "appHostname": "http://localhost:7777"
   },
   "publishStore": {
     "type": "local",

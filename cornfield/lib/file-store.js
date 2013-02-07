@@ -33,7 +33,7 @@ var BaseFileStore = {
     name = name + '';
     //return Path.join( this.namePrefix, name ) + this.nameSuffix;
     return (Path.join( this.namePrefix, name ) + this.nameSuffix)
-        .replace("\\", "/");
+        .replace(/\\/g, "/");
   }
 };
 

@@ -317,12 +317,14 @@ app.get( '/dashboard', filter.isStorageAvailable, function( req, res ) {
 
     docs.forEach( function( project ) {
       if ( project.template && VALID_TEMPLATES[ project.template ] ) {
+        var templateRelativeUrl = templateConfigs[ project.template ].template;
         userProjects.push({
           // make sure _id is a string. saw some strange double-quotes on output otherwise
           _id: String(project.id),
           name: sanitizer.escapeHTML( project.name ),
           template: project.template,
-          href: path.relative( WWW_ROOT, templateConfigs[ project.template ].template ) +
+          //href: path.relative( WWW_ROOT, templateConfigs[ project.template ].template ) +
+          href: path.relative( WWW_ROOT, templateRelativeUrl ).replace(/\\/g, "/") +
             "?savedDataUrl=/api/project/" + project.id,
           updatedAt: project.updatedAt
         });
