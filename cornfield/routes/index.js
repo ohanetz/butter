@@ -11,8 +11,8 @@ module.exports = function routesCtor( app, User, filter, sanitizer, stores, util
   app.get( '/api/whoami', function( req, res ) {
     var email = req.session.email;
     if (!email) {
-        // OMER: Default Email for DEV
-        email = "o.hanetz@gmail.com";
+        // Default Email
+        email = "Anonymous";
     }
 
     if (email) {
@@ -37,8 +37,8 @@ module.exports = function routesCtor( app, User, filter, sanitizer, stores, util
 
     var email = req.session.email;
     if (!email) {
-        // OMER: Default Email for DEV
-        email = "o.hanetz@gmail.com";
+        // Default Email
+        email = "Anonymous";
     }
     
     User.findProject( email, req.params.id, function( err, doc ) {
@@ -78,8 +78,8 @@ module.exports = function routesCtor( app, User, filter, sanitizer, stores, util
     
     var email = req.session.email;
     if (!email) {
-        // OMER: Default Email for DEV
-        email = "o.hanetz@gmail.com";
+        // Default Email
+        email = "Anonymous";
     }
 
     User.deleteProject( email, req.params.id, function( err, imagesToDestroy ) {
@@ -128,8 +128,8 @@ module.exports = function routesCtor( app, User, filter, sanitizer, stores, util
     
     var email = req.session.email;
     if (!email) {
-        // OMER: Default Email for DEV
-        email = "o.hanetz@gmail.com";
+        // Default Email
+        email = "Anonymous";
     }
 
     if ( req.body.id ) {

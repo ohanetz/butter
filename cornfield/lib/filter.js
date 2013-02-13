@@ -6,8 +6,8 @@ filters = {
   isLoggedIn: function( req, res, next ) {
     var email = req.session.email;
     if (!email) {
-        // OMER: Default Email for DEV
-        email = "o.hanetz@gmail.com";
+        // Default Email
+        email = "Anonymous";
     }
     
     if ( email ) {

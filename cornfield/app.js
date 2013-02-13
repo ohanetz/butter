@@ -125,8 +125,8 @@ app.post( '/api/publish/:id',
       id = parseInt( req.params.id, 10 );
       
     if (!email) {
-        // OMER: Default Email for DEV
-        email = "o.hanetz@gmail.com";
+        // Default Email
+        email = "Anonymous";
     }
 
   if ( isNaN( id ) ) {
@@ -306,12 +306,35 @@ app.post( '/api/publish/:id',
   });
 });
 
+app.get( '/userData', function( req, res ) {
+    var userName = req.param("userName", "Anonymous"); 
+    console.log("User: " + userName);
+    req.session.email = userName;
+    res.json({ error: 'okay'});
+});
+
+
+app.get( '/loadVariables', function( req, res ) {
+    var soap = require('soap');
+    var url = 'C:\\Workspace\\butter\\DataExternalization.wsdl';
+    var args = {customerName: "hanetz"};
+    soap.createClient(url, function(err, client) {
+        //console.log(client.describe());
+        client.DataExternalization.DataExternalizationSOAP.getCustomerVariables(args, function(err, result) {
+            //console.log(result);
+            res.writeHead(200, { "Content-Type" : "text/plain" });
+            res.write(JSON.stringify(result), "UTF-8");
+            res.end();
+        });
+    });
+});
+    
 app.get( '/dashboard', filter.isStorageAvailable, function( req, res ) {
   var email = req.session.email;
 
   if ( !email ) {
-    // OMER: Default Email for DEV
-    email = "o.hanetz@gmail.com"
+    // Default Email
+    email = "Anonymous"
     //res.render( 'dashboard-unauthorized.jade' );
     //return;
   }

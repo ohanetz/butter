@@ -11,6 +11,8 @@
   <!--[if lt IE 9]>
     <script src="/media/js/html5shiv.js"></script>
   <![endif]-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js" data-butter-exclude></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js" data-butter-exclude></script>
   <script type="text/javascript">
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-35433268-2']);
@@ -21,9 +23,44 @@
       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
     })();
+    
+    function getParam( name ) {
+      name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+      var regexS = "[\\?&]"+name+"=([^&#]*)";
+      var regex = new RegExp( regexS );
+      var results = regex.exec( window.location.href );
+      if( results == null )
+        return "";
+      else
+        return results[1];
+    }
+    
+    var userName = getParam("userName");
+    if (userName != "") {
+        $.get(
+            "/userData",
+            {userName : getParam("userName")},
+            function() {
+               // Redirecting to Editor.
+               window.location = "templates/basic";
+            });
+    } else {
+        // Redirecting to Editor.
+        window.location = "templates/basic";
+    }
+    
+//    var request = require("request");
+//    request({
+//        uri: "/userData",
+//        body: "userName=" + getParam("userName"),
+//    }, function(error, response, body) {
+//        console.log(error);
+//        console.log(response);
+//        console.log(body);
+//    });
 
     // Redirecting to Editor.
-    window.location = "templates/basic";
+    //window.location = "templates/basic";
 
   </script>
 </head>
