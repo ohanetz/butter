@@ -162,6 +162,13 @@
     },
 
     _setup: function( options ) {
+          
+      
+        if ( options["variable"] ) {
+            options.text += "${" + options["variable"]+ "}";
+            options["variable"] = null;
+        }
+        
       var target = Popcorn.dom.find( options.target ),
           text = newlineToBreak( options.text ),
           container = options._container = document.createElement( "div" ),

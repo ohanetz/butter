@@ -104,6 +104,7 @@ define( [ "./logger", "./eventmanager", "./observer",
      * @throws TrackEventUpdateException: When an update operation failed because of conflicting times or other serious property problems.
      */
     this.update = function( updateOptions, applyDefaults ) {
+      
       updateOptions = updateOptions || {};
 
       var newStart = updateOptions.start,
@@ -143,6 +144,8 @@ define( [ "./logger", "./eventmanager", "./observer",
       if ( updateNotification.cancelled ) {
         return;
       }
+        
+      _popcornOptions[ "variable" ] = updateOptions["variable"];
 
       if ( _track && _track._media ) {
         media = _track._media;

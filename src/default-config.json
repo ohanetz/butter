@@ -141,5 +141,8 @@
   "icons": {
     "default": "popcorn-icon.png",
     "image": "image-icon.png"
+  },
+  "variables": {
+      "icon": "{{baseDir}}templates/assets/images/variable.png"
   }
 }

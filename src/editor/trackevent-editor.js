@@ -62,8 +62,10 @@ define([ "util/lang", "util/keys", "util/time", "./base-editor", "ui/widget/tool
     events.open = function( parentElement, trackEvent ) {
       var basicButton = rootElement.querySelector( ".basic-tab" ),
           advancedButton = rootElement.querySelector( ".advanced-tab" ),
+          variablesButton = rootElement.querySelector( ".variables-tab" ),
           basicTab = rootElement.querySelector( ".editor-options" ),
           advancedTab = rootElement.querySelector( ".advanced-options" ),
+          variablesTab = rootElement.querySelector( ".variables-options" ),
           wrapper = rootElement.querySelector( ".scrollbar-outer" );
 
       if ( !_errorMessageContainer && rootElement ) {
@@ -77,23 +79,39 @@ define([ "util/lang", "util/keys", "util/time", "./base-editor", "ui/widget/tool
       }
       // Code for handling basic/advanced options tabs are going to be the same. If the user defined these buttons
       // handle it for them here rather than force them to write the code in their editor
-      if ( basicButton && advancedButton ) {
+      if ( basicButton && advancedButton && variablesButton ) {
         basicButton.addEventListener( "mouseup", function() {
           if ( basicTab.classList.contains( "display-off" ) ) {
-            basicTab.classList.toggle( "display-off" );
-            advancedTab.classList.toggle( "display-off" );
+            basicTab.classList.remove( "display-off" );
+            advancedTab.classList.add( "display-off" );
+            variablesTab.classList.add( "display-off" );
             basicButton.classList.add( "butter-active" );
             advancedButton.classList.remove( "butter-active" );
+            variablesButton.classList.remove( "butter-active" );
             extendObject.scrollbar.update();
           }
         });
 
         advancedButton.addEventListener( "mouseup", function() {
-          if ( !basicTab.classList.contains( "display-off" ) ) {
-            basicTab.classList.toggle( "display-off" );
-            advancedTab.classList.toggle( "display-off" );
+          if ( advancedTab.classList.contains( "display-off" ) ) {
+            basicTab.classList.add( "display-off" );
+            advancedTab.classList.remove( "display-off" );
+            variablesTab.classList.add( "display-off" );
             basicButton.classList.remove( "butter-active" );
             advancedButton.classList.add( "butter-active" );
+            variablesButton.classList.remove( "butter-active" );
+            extendObject.scrollbar.update();
+          }
+        });
+
+        variablesButton.addEventListener( "mouseup", function() {
+          if ( variablesTab.classList.contains( "display-off" ) ) {
+            basicTab.classList.add( "display-off" );
+            advancedTab.classList.add( "display-off" );
+            variablesTab.classList.remove( "display-off" );
+            basicButton.classList.remove( "butter-active" );
+            advancedButton.classList.remove( "butter-active" );
+            variablesButton.classList.add( "butter-active" );
             extendObject.scrollbar.update();
           }
         });

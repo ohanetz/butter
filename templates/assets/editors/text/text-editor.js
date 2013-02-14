@@ -11,7 +11,7 @@
 
     var _rootElement = rootElement,
         _trackEvent,
-        _butter,
+        _butter = butter,
         _popcornOptions,
         _falseClick = function() {
           return false;
@@ -33,8 +33,15 @@
 
       var basicContainer = _rootElement.querySelector( ".editor-options" ),
           advancedContainer = _rootElement.querySelector( ".advanced-options" ),
+          //variablesContainer = _rootElement.querySelector( ".variables-options" ),
+          variablesContainer = _rootElement.querySelector( ".butter-variables-container" ),
           pluginOptions = {},
           pickers = {};
+          
+      window.EditorHelper.droppable(_trackEvent, basicContainer);
+//      $(container).droppable({drop: function(event, ui) {
+//          $(this).css("background-color", "red").html("Omer!");
+//      }});
 
       function callback( elementType, element, trackEvent, name ) {
         pluginOptions[ name ] = { element: element, trackEvent: trackEvent, elementType: elementType };
@@ -66,6 +73,7 @@
               pickers[ prop ].setAttribute( "disabled", "true" );
             }
           }
+          
           trackEvent.update( updateOptions );
         }
 
@@ -138,6 +146,8 @@
         advancedContainer: advancedContainer,
         ignoreManifestKeys: [ "start", "end" ]
       });
+      
+      displayEditor(_butter.config, variablesContainer, trackEvent);
 
       attachHandlers();
       _this.updatePropertiesFromManifest( trackEvent );
@@ -178,5 +188,39 @@
         _trackEvent.unlisten( "trackeventupdated", onTrackEventUpdated );
       }
     });
+    
+    function displayEditor( config, variablesContainer, trackEvent ) {
+        
+        var variablesArray;
+        
+        $.getJSON("/loadVariables", function(variables) {
+            var variablesStr = variables.out;
+            if ((variablesStr != null) 
+                && (variablesStr.indexOf("[") > -1) && (variablesStr.indexOf("]") > -1 )) {
+
+                variablesContainer.innerHTML = "";
+
+                variablesStr = variablesStr.substring(variablesStr.indexOf("[") + 1, variablesStr.indexOf("]"));
+                variablesArray = variablesStr.split(", ");
+                variablesArray.forEach(function(variable) {
+                   variableHTML = '<a id="' + variable + '_varName" href="#" draggable="true" class="butter-plugin-tile" data-butter-draggable-type="plugin">'
+                       + '<span class="butter-plugin-icon" style="background-image: url(' + config.value("variables").icon + ');">'
+                       + '</span><span class="butter-plugin-label">' + variable + '</span></a>';
+                   variablesContainer.innerHTML += variableHTML;
+
+                });
+            }
+        }).complete(function() {
+            
+            variablesArray.forEach(function(variable) {
+                $("#" + variable + "_varName").click(function() {
+                    var updateOptions = {};
+                    updateOptions["variable"] = variable;
+                    trackEvent.update(updateOptions);
+               });
+            })
+        });
+
+    }
   });
 }( window.Butter ));
