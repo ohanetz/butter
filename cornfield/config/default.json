@@ -18,6 +18,9 @@
     "templates": "../templates",
     "appHostname": "http://localhost:7777"
   },
+  "wsdl": {
+      "dataExternalization": "../wsdl/DataExternalization.wsdl"
+  },
   "publishStore": {
     "type": "local",
     "options": {

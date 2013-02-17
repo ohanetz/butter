@@ -316,8 +316,8 @@ app.get( '/userData', function( req, res ) {
 
 app.get( '/loadVariables', function( req, res ) {
     var soap = require('soap');
-    var url = 'C:\\Workspace\\butter\\DataExternalization.wsdl';
-    var args = {customerName: "hanetz"};
+    var url = CONFIG.wsdl.dataExternalization;
+    var args = {customerName: req.session.email};
     soap.createClient(url, function(err, client) {
         //console.log(client.describe());
         client.DataExternalization.DataExternalizationSOAP.getCustomerVariables(args, function(err, result) {

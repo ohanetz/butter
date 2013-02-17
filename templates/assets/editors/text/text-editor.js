@@ -212,13 +212,15 @@
             }
         }).complete(function() {
             
-            variablesArray.forEach(function(variable) {
-                $("#" + variable + "_varName").click(function() {
-                    var updateOptions = {};
-                    updateOptions["variable"] = variable;
-                    trackEvent.update(updateOptions);
-               });
-            })
+            if (variablesArray != null) {
+                variablesArray.forEach(function(variable) {
+                    $("#" + variable + "_varName").click(function() {
+                        var updateOptions = {};
+                        updateOptions["variable"] = variable;
+                        trackEvent.update(updateOptions);
+                   });
+                })
+            }
         });
 
     }
