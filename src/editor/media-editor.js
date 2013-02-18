@@ -15,6 +15,7 @@ define( [ "util/lang", "util/uri", "util/keys", "editor/editor", "dialog/dialog"
       _currentMediaWrapper = _containerElement.querySelector( ".current-media-wrapper" ),
       _addAlternateSourceBtn = _containerElement.querySelector( ".add-alternate-media-source-btn" ),
       _mediaErrorMessage = _containerElement.querySelector( ".media-error-message" ),
+      _serverMediaContainer = _containerElement.querySelector( ".server-media-container" ),
       _media,
       _butter,
       _inputCount = 0,
@@ -170,6 +171,47 @@ define( [ "util/lang", "util/uri", "util/keys", "editor/editor", "dialog/dialog"
       createInput( "" );
       _emptyInputs--;
     }
+    
+    
+    var videosArray;
+
+    $.getJSON("/loadVideos", function(videos) {
+        var videosStr = videos.out;
+        if ((videosStr != null) 
+            && (videosStr.indexOf("[") > -1) && (videosStr.indexOf("]") > -1 )) {
+
+            _serverMediaContainer.innerHTML = "";
+
+            videosStr = videosStr.substring(videosStr.indexOf("[") + 1, videosStr.indexOf("]"));
+            if (videosStr.length > 0) {
+                videosArray = videosStr.split(", ");
+                videosArray.forEach(function(video) {
+                    if (video.indexOf("###") > -1) {
+                        var videoDetails = video.split("###");
+                        videoHTML = '<a id="' + videoDetails[0].replace(/\s/g, '_') + '_vidName" href="#" draggable="true" class="butter-plugin-big-tile" data-butter-draggable-type="plugin">'
+                           + '<span class="butter-plugin-label" style="font-weight: bold;">' + videoDetails[0] + '</span><br />'
+                           + '<span class="butter-plugin-label" style="font-size: 8px;">' + videoDetails[1] + '</span></a>';
+                        _serverMediaContainer.innerHTML += videoHTML;
+                    }
+                });
+            }
+        }
+    }).complete(function() {
+        _this.scrollbar.update();
+
+        if (videosArray != null) {
+            videosArray.forEach(function(video) {
+                if (video.indexOf("###") > -1) {
+                    var videoDetails = video.split("###");
+                    $("#" + videoDetails[0].replace(/\s/g, '_') + "_vidName").click(function() {
+                        clearCurrentMediaList();
+                        createInput(videoDetails[1], true);
+                        updateButterMedia();
+                   });
+                }
+            })
+        }
+    });
   }
 
   function showError( state ) {

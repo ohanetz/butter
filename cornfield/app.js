@@ -328,6 +328,22 @@ app.get( '/loadVariables', function( req, res ) {
         });
     });
 });
+
+
+app.get( '/loadVideos', function( req, res ) {
+    var soap = require('soap');
+    var url = CONFIG.wsdl.dataExternalization;
+    var args = {customerName: req.session.email};
+    soap.createClient(url, function(err, client) {
+        //console.log(client.describe());
+        client.DataExternalization.DataExternalizationSOAP.getCustomerVideoFiles(args, function(err, result) {
+            //console.log(result);
+            res.writeHead(200, { "Content-Type" : "text/plain" });
+            res.write(JSON.stringify(result), "UTF-8");
+            res.end();
+        });
+    });
+});
     
 app.get( '/dashboard', filter.isStorageAvailable, function( req, res ) {
   var email = req.session.email;

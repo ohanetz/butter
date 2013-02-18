@@ -26,6 +26,32 @@
       		</xsd:sequence>
       	</xsd:complexType>
       </xsd:element>
+      <xsd:element name="getCustomerVideoFiles">
+      	<xsd:complexType>
+      		<xsd:sequence>
+
+      			<xsd:element name="customerName" type="xsd:string"></xsd:element>
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getCustomerVideoFilesResponse">
+      	<xsd:complexType>
+      		<xsd:sequence>
+
+      			<xsd:element name="out" type="xsd:string"></xsd:element>
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getCustomerVideoFilesFault">
+      	<xsd:complexType>
+      		<xsd:sequence>
+
+      			<xsd:element name="getCustomerVideoFilesFault"
+      				type="xsd:string">
+      			</xsd:element>
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="getCustomerVariablesRequest">
@@ -37,11 +63,25 @@
   <wsdl:message name="getCustomerVariablesFault">
   	<wsdl:part name="parameters" element="tns:getCustomerVariablesFault"></wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getCustomerVideoFilesRequest">
+  	<wsdl:part name="parameters" element="tns:getCustomerVideoFiles"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCustomerVideoFilesResponse">
+  	<wsdl:part name="parameters" element="tns:getCustomerVideoFilesResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCustomerVideoFilesFault">
+  	<wsdl:part name="parameters" element="tns:getCustomerVideoFilesFault"></wsdl:part>
+  </wsdl:message>
   <wsdl:portType name="DataExternalization">
     <wsdl:operation name="getCustomerVariables">
       <wsdl:input message="tns:getCustomerVariablesRequest"/>
       <wsdl:output message="tns:getCustomerVariablesResponse"/>
             <wsdl:fault name="fault" message="tns:getCustomerVariablesFault"></wsdl:fault>
+        </wsdl:operation>
+    <wsdl:operation name="getCustomerVideoFiles">
+    	<wsdl:input message="tns:getCustomerVideoFilesRequest"></wsdl:input>
+    	<wsdl:output message="tns:getCustomerVideoFilesResponse"></wsdl:output>
+            <wsdl:fault name="fault" message="tns:getCustomerVideoFilesFault"></wsdl:fault>
         </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="DataExternalizationSOAP" type="tns:DataExternalization">
