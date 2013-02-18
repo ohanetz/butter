@@ -271,7 +271,8 @@
 #controls-logo {
   width: 45px;
   height: 42px;
-  background: url( "../resources/controls/controls_icons.png" ) no-repeat -85px 2px;
+  background: url( "../resources/icons/fb-logo.png" ) no-repeat;
+  background-size: 67% 100%;
   position: absolute;
   right: 0;
   cursor: pointer;

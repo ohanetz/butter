@@ -311,7 +311,6 @@ function checkHTML() {
     join( SRC_DIR, "dialog", "dialogs" ),
     join( SRC_DIR, "layouts" ),
     join( SRC_DIR, "editor" ),
-    join( SRC_DIR, "ui", "webmakernav" ),
     TEMPLATES_DIR ] ).filter( function( file ) {
     return file.match( /\.html$/ );
   }).forEach( function( filename ) {
@@ -379,12 +378,6 @@ function buildCSS(compress) {
   });
 
   lessToCSS({
-    lessFile: "src/ui/webmakernav/webmakernav.less",
-    cssFile: "src/ui/webmakernav/webmakernav.css",
-    compress: compress
-  });
-
-  lessToCSS({
     lessFile: "css/embed.less",
     cssFile: "css/embed.css",
     compress: compress
@@ -442,15 +435,6 @@ function buildJS( version, compress ){
     echo(result.output);
   }
   stampVersion( version, 'dist/src/embed.js' );
-  echo( "## Result:" + result.output );
-
-
-  echo( "" );
-  echo( "## webmakernav.js" );
-  result = exec(RJS + ' -o tools/webmakernav.js ' + doCompress, {silent: true});
-  if (!!result.code) {
-    echo(result.output);
-  }
   echo( "## Result:" + result.output );
 }
 

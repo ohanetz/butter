@@ -1,5 +1,5 @@
-define([ "dialog/dialog", "util/lang", "text!layouts/header.html", "ui/user-data", "ui/webmakernav/webmakernav", "ui/widget/tooltip" ],
-  function( Dialog, Lang, HEADER_TEMPLATE, UserData, WebmakerBar, ToolTip ) {
+define([ "dialog/dialog", "util/lang", "text!layouts/header.html", "ui/user-data", "ui/widget/tooltip" ],
+  function( Dialog, Lang, HEADER_TEMPLATE, UserData, ToolTip ) {
 
   return function( butter, options ){
 
@@ -196,15 +196,7 @@ define([ "dialog/dialog", "util/lang", "text!layouts/header.html", "ui/user-data
       var dialog = Dialog.spawn( "feedback" );
       dialog.open();
     }
-
-
-    function onLogin() {
-      //_webmakerNav.views.login( butter.cornfield.username() );
-    }
-
-    butter.listen( "autologinsucceeded", onLogin, false );
-    butter.listen( "authenticated", onLogin, false );
-    //butter.listen( "logout", _webmakerNav.views.logout, false );
+    
 
     function destroyToolTip() {
       if ( _noProjectNameToolTip && !_noProjectNameToolTip.destroyed ) {
