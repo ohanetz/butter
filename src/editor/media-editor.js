@@ -176,6 +176,11 @@ define( [ "util/lang", "util/uri", "util/keys", "editor/editor", "dialog/dialog"
     var videosArray;
 
     $.getJSON("/loadVideos", function(videos) {
+        
+        if (videos.out === undefined) {
+            return;
+        }
+        
         var videosStr = videos.out;
         if ((videosStr != null) 
             && (videosStr.indexOf("[") > -1) && (videosStr.indexOf("]") > -1 )) {
@@ -188,15 +193,23 @@ define( [ "util/lang", "util/uri", "util/keys", "editor/editor", "dialog/dialog"
                 videosArray.forEach(function(video) {
                     if (video.indexOf("###") > -1) {
                         var videoDetails = video.split("###");
-                        videoHTML = '<a id="' + videoDetails[0].replace(/\s/g, '_') + '_vidName" href="#" draggable="true" class="butter-plugin-big-tile" data-butter-draggable-type="plugin">'
+                        videoHTML = '<div class="butter-video-container">'
+                           + '<a id="' + videoDetails[0].replace(/\s/g, '_') + '_vidName" href="#" draggable="true" class="butter-plugin-big-tile" data-butter-draggable-type="plugin">'
                            + '<span class="butter-plugin-label" style="font-weight: bold;">' + videoDetails[0] + '</span><br />'
-                           + '<span class="butter-plugin-label" style="font-size: 8px;">' + videoDetails[1] + '</span></a>';
+                           + '<span class="butter-plugin-label" style="font-size: 8px;">' + videoDetails[1] + '</span></a>'
+                           + '<video class="butter-video-center" id="' + videoDetails[0].replace(/\s/g, '_') + '_vidPreview" preload controls>'
+                           + '<source src="' + videoDetails[1] + '" /></video></div>';
                         _serverMediaContainer.innerHTML += videoHTML;
                     }
                 });
             }
         }
     }).complete(function() {
+        
+        if (videosArray === undefined) {
+            return;
+        }
+        
         _this.scrollbar.update();
 
         if (videosArray != null) {
