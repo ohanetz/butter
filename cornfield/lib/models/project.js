@@ -53,6 +53,9 @@ module.exports = function(sequelize, DataTypes) {
     },
     remixedFrom: {
       type: DataTypes.INTEGER
+    },
+    dataSourceId: {
+      type: DataTypes.INTEGER
     }
   });
 };

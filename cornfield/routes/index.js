@@ -127,6 +127,7 @@ module.exports = function routesCtor( app, User, filter, sanitizer, stores, util
     var projectData = req.body;
     
     var email = req.session.email;
+    var dataSourceId = req.session.dataSourceId;
     if (!email) {
         // Default Email
         email = "Anonymous";
@@ -135,7 +136,7 @@ module.exports = function routesCtor( app, User, filter, sanitizer, stores, util
     if ( req.body.id ) {
       files = datauri.filterProjectDataURIs( projectData.data, utils.generateDataURIPair );
 
-      User.updateProject( email, req.body.id, projectData, function( err, doc, imagesToDestroy ) {
+      User.updateProject( email, req.body.id, projectData, dataSourceId, function( err, doc, imagesToDestroy ) {
         if ( err ) {
           res.json( { error: err }, 500 );
           return;
@@ -164,7 +165,7 @@ module.exports = function routesCtor( app, User, filter, sanitizer, stores, util
     } else {
       files = datauri.filterProjectDataURIs( projectData.data, utils.generateDataURIPair );
 
-      User.createProject( email, projectData, function( err, doc ) {
+      User.createProject( email, projectData, dataSourceId, function( err, doc ) {
         if ( err ) {
           res.json( { error: err }, 500 );
           return;

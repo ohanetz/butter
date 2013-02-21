@@ -21,7 +21,8 @@ define([ "dialog/dialog", "util/lang", "text!layouts/header.html", "ui/user-data
         _projectMenuList = _projectMenu.querySelector( ".butter-btn-menu" ),
         _noProjectNameToolTip,
         _projectTitlePlaceHolderText = _projectName.innerHTML,
-        _toolTip;
+        _toolTip,
+        _dataSourcesList = _rootElement.querySelector( ".butter-pic-datasources" );
 
     // create a tooltip for the plrojectName element
     _toolTip = ToolTip.create({
@@ -51,6 +52,54 @@ define([ "dialog/dialog", "util/lang", "text!layouts/header.html", "ui/user-data
 //        nameError();
 //      }
     }
+    
+    var dataSourcesArray;
+
+    $.getJSON("/loadDataSources", function(dataSources) {
+
+        if (dataSources.out == undefined) {
+            return;
+        }
+
+        var dataSourcesStr = dataSources.out;
+        if ((dataSourcesStr != null) 
+            && (dataSourcesStr.indexOf("[") > -1) && (dataSourcesStr.indexOf("]") > -1 )) {
+
+            _dataSourcesList.innerHTML = "";
+
+            dataSourcesStr = dataSourcesStr.substring(dataSourcesStr.indexOf("[") + 1, dataSourcesStr.indexOf("]"));
+            if (dataSourcesStr.length > 0) {
+                dataSourcesArray = dataSourcesStr.split(", ");
+                dataSourcesArray.forEach(function(dataSource) {
+                   _dataSourcesList.innerHTML += '<option value="' + dataSource + '">' + dataSource + '</option>';
+                });
+            }
+        }
+//    }).complete(function() {
+//
+//        if (dataSourcesArray === undefined) {
+//            return;
+//        }
+//
+//        if (dataSourcesArray != null) {
+//            dataSourcesArray.forEach(function(variable) {
+//                $("#" + variable + "_varName").click(function() {
+//                    var updateOptions = {};
+//                    updateOptions["variable"] = variable;
+//                    trackEvent.update(updateOptions);
+//               });
+//            })
+//        }
+    });
+    
+    
+    _dataSourcesList.addEventListener("change", function() {
+        $.get("/setDataSource", {dataSource: _dataSourcesList.value}, function() {
+            
+        });
+    });
+    
+
 
     function openShareEditor() {
       butter.editor.openEditor( "share-properties" );

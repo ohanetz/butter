@@ -360,6 +360,39 @@ app.get( '/loadVideos', function( req, res ) {
         console.log("WebService Warning! " + err);
     }
 });
+
+
+app.get( '/loadDataSources', function( req, res ) {
+    try {
+        var soap = require('soap');
+        var url = CONFIG.wsdl.dataExternalization;
+        var args = {customerName: req.session.email};
+        soap.createClient(url, function(err, client) {
+            //console.log(client.describe());
+            client.DataExternalization.DataExternalizationSOAP.getCustomerDataSources(args, function(err, result) {
+                //console.log(result);
+                try {
+                    res.writeHead(200, { "Content-Type" : "text/plain" });
+                    res.write(JSON.stringify(result), "UTF-8");
+                    res.end();
+                } catch (err) {
+                    console.log("WebService Warning! " + err);
+                } 
+            });
+        });
+    } catch (err) {
+        console.log("WebService Warning! " + err);
+    }
+});
+
+
+app.get( '/setDataSource', function( req, res ) {
+    var dataSource = req.param("dataSource"); 
+    console.log("DataSource: " + dataSource);
+    req.session.dataSourceId = dataSource;
+    res.json({ error: 'okay'});
+});
+
     
 app.get( '/dashboard', filter.isStorageAvailable, function( req, res ) {
   var email = req.session.email;

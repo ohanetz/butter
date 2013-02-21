@@ -94,7 +94,7 @@ module.exports = function( config, dbReadyFn ) {
       return sequelize;
     },
 
-    createProject: function( email, data, callback ) {
+    createProject: function( email, data, dataSourceId, callback ) {
       if ( !email || !data ) {
         callback( "not enough parameters to update" );
         return;
@@ -108,7 +108,8 @@ module.exports = function( config, dbReadyFn ) {
         template: data.template,
         originalButterVersion: versions.butter,
         latestButterVersion: versions.butter,
-        remixedFrom: data.remixedFrom
+        remixedFrom: data.remixedFrom,
+        dataSourceId: dataSourceId
       });
 
       project.save().complete( callback );
@@ -181,7 +182,7 @@ module.exports = function( config, dbReadyFn ) {
       return dbOnline;
     },
 
-    updateProject: function updateProject( email, pid, data, callback ) {
+    updateProject: function updateProject( email, pid, data, dataSourceId, callback ) {
       if ( !email || !pid || !data ) {
         callback( "not enough parameters to update" );
         return;
@@ -204,7 +205,8 @@ module.exports = function( config, dbReadyFn ) {
           author: data.author || "",
           template: data.template,
           latestButterVersion: versions.butter,
-          remixedFrom: data.remixedFrom
+          remixedFrom: data.remixedFrom,
+          dataSourceId: dataSourceId
         })
         .error( function( err ) {
           callback( err );
