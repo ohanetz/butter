@@ -71,7 +71,10 @@ define([ "dialog/dialog", "util/lang", "text!layouts/header.html", "ui/user-data
             if (dataSourcesStr.length > 0) {
                 dataSourcesArray = dataSourcesStr.split(", ");
                 dataSourcesArray.forEach(function(dataSource) {
-                   _dataSourcesList.innerHTML += '<option value="' + dataSource + '">' + dataSource + '</option>';
+                    if (dataSource.indexOf("###") > -1) {
+                        var dsDetails = dataSource.split("###");
+                        _dataSourcesList.innerHTML += '<option value="' + dsDetails[0] + '">' + dsDetails[1] + '</option>';
+                    }
                 });
             }
         }
@@ -94,7 +97,7 @@ define([ "dialog/dialog", "util/lang", "text!layouts/header.html", "ui/user-data
     
     
     _dataSourcesList.addEventListener("change", function() {
-        $.get("/setDataSource", {dataSource: _dataSourcesList.value}, function() {
+        $.get("/setDataSource", {dataSource: _dataSourcesList.options[_dataSourcesList.selectedIndex].value}, function() {
             
         });
     });
