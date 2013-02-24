@@ -316,12 +316,22 @@ app.get( '/userData', function( req, res ) {
 
 app.get( '/loadVariables', function( req, res ) {
     try {
+        
+        var dataSourceId = req.session.dataSourceId;
+        console.log("ID: " + dataSourceId);
+        if ((dataSourceId == undefined) || (isNaN(dataSourceId))) {
+            return;
+        }
+        
         var soap = require('soap');
         var url = CONFIG.wsdl.dataExternalization;
-        var args = {customerName: req.session.email};
+        var args = {
+            customerName: req.session.email,
+            dataSourceId: parseInt(dataSourceId)
+        };
         soap.createClient(url, function(err, client) {
             //console.log(client.describe());
-            client.DataExternalization.DataExternalizationSOAP.getCustomerVariables(args, function(err, result) {
+            client.DataExternalization.DataExternalizationSOAP.getCustomerVariablesForDataSource(args, function(err, result) {
                 //console.log(result);
                 try {
                     res.writeHead(200, { "Content-Type" : "text/plain" });

@@ -78,6 +78,34 @@
       		</xsd:sequence>
       	</xsd:complexType>
       </xsd:element>
+      <xsd:element name="getCustomerVariablesForDataSource">
+      	<xsd:complexType>
+      		<xsd:sequence>
+
+      			<xsd:element name="customerName" type="xsd:string"></xsd:element>
+      			<xsd:element name="dataSourceId" type="xsd:int"></xsd:element>
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getCustomerVariablesForDataSourceResponse">
+      	<xsd:complexType>
+      		<xsd:sequence>
+
+      			<xsd:element name="out" type="xsd:string"></xsd:element>
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getCustomerVariablesForDataSourceFault">
+      	<xsd:complexType>
+      		<xsd:sequence>
+
+      			<xsd:element
+      				name="getCustomerVariablesForDataSourceFault"
+      				type="xsd:string">
+      			</xsd:element>
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="getCustomerVariablesRequest">
@@ -107,6 +135,15 @@
   <wsdl:message name="getCustomerDataSourcesFault">
   	<wsdl:part name="parameters" element="tns:getCustomerDataSourcesFault"></wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getCustomerVariablesForDataSourceRequest">
+  	<wsdl:part name="parameters" element="tns:getCustomerVariablesForDataSource"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCustomerVariablesForDataSourceResponse">
+  	<wsdl:part name="parameters" element="tns:getCustomerVariablesForDataSourceResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCustomerVariablesForDataSourceFault">
+  	<wsdl:part name="parameters" element="tns:getCustomerVariablesForDataSourceFault"></wsdl:part>
+  </wsdl:message>
   <wsdl:portType name="DataExternalization">
     <wsdl:operation name="getCustomerVariables">
       <wsdl:input message="tns:getCustomerVariablesRequest"/>
@@ -122,6 +159,11 @@
     	<wsdl:input message="tns:getCustomerDataSourcesRequest"></wsdl:input>
     	<wsdl:output message="tns:getCustomerDataSourcesResponse"></wsdl:output>
             <wsdl:fault name="fault" message="tns:getCustomerDataSourcesFault"></wsdl:fault>
+        </wsdl:operation>
+    <wsdl:operation name="getCustomerVariablesForDataSource">
+    	<wsdl:input message="tns:getCustomerVariablesForDataSourceRequest"></wsdl:input>
+    	<wsdl:output message="tns:getCustomerVariablesForDataSourceResponse"></wsdl:output>
+            <wsdl:fault name="fault" message="tns:getCustomerVariablesForDataSourceFault"></wsdl:fault>
         </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="DataExternalizationSOAP" type="tns:DataExternalization">
