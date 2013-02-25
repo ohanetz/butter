@@ -37,7 +37,11 @@ define([ "dialog/dialog", "util/lang", "text!layouts/header.html", "ui/user-data
     ToolTip.apply( _projectTitle );
 
     function saveProject() {
-        prepare();
+        $.get("/setDataSource", {dataSource: _dataSourcesList.options[_dataSourcesList.selectedIndex].value}, function() {
+
+        }).complete(function() {
+            prepare();
+        });
 //      if ( !butter.cornfield.authenticated() ) {
 //        _userData.authenticationRequired();
 //      }
@@ -65,7 +69,7 @@ define([ "dialog/dialog", "util/lang", "text!layouts/header.html", "ui/user-data
         if ((dataSourcesStr != null) 
             && (dataSourcesStr.indexOf("[") > -1) && (dataSourcesStr.indexOf("]") > -1 )) {
 
-            _dataSourcesList.innerHTML = "";
+            _dataSourcesList.innerHTML = '<option value="0">None</option>';
 
             dataSourcesStr = dataSourcesStr.substring(dataSourcesStr.indexOf("[") + 1, dataSourcesStr.indexOf("]"));
             if (dataSourcesStr.length > 0) {
@@ -97,9 +101,13 @@ define([ "dialog/dialog", "util/lang", "text!layouts/header.html", "ui/user-data
     
     
     _dataSourcesList.addEventListener("change", function() {
-        $.get("/setDataSource", {dataSource: _dataSourcesList.options[_dataSourcesList.selectedIndex].value}, function() {
-            
-        });
+//        $.get("/setDataSource", {dataSource: _dataSourcesList.options[_dataSourcesList.selectedIndex].value}, function() {
+//            butter.project.dataSourceId = _dataSourcesList.options[_dataSourcesList.selectedIndex].value;
+//            butter.project.isSaved = false;
+//            _userData.authenticationRequired(prepare);
+//        });
+        butter.project.isSaved = false;
+        saveProject();
     });
     
 
@@ -355,6 +363,17 @@ define([ "dialog/dialog", "util/lang", "text!layouts/header.html", "ui/user-data
     butter.listen( "ready", function() {
       if ( butter.project.name ) {
         _projectName.textContent = butter.project.name;
+      }
+      
+      if ( butter.project.dataSourceId ) {
+        for (var i=0; i<_dataSourcesList.length; i++){
+            if (_dataSourcesList.options[i].value == butter.project.dataSourceId) {
+                _dataSourcesList.options[i].selected = true;
+            }
+        }  
+
+        butter.project.isSaved = false;
+        saveProject();
       }
     });
 

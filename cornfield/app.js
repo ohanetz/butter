@@ -318,7 +318,6 @@ app.get( '/loadVariables', function( req, res ) {
     try {
         
         var dataSourceId = req.session.dataSourceId;
-        console.log("ID: " + dataSourceId);
         if ((dataSourceId == undefined) || (isNaN(dataSourceId))) {
             return;
         }
@@ -401,6 +400,20 @@ app.get( '/setDataSource', function( req, res ) {
     console.log("DataSource: " + dataSource);
     req.session.dataSourceId = dataSource;
     res.json({ error: 'okay'});
+});
+
+
+app.get ( '/getDataSource', function( req, res ) {
+    
+    res.writeHead(200, { "Content-Type" : "text/plain" });
+    var dataSourceId = req.session.dataSourceId;
+    if ((dataSourceId == undefined) || (isNaN(dataSourceId)) || (parseInt(dataSourceId == 0))) {
+        res.write("-1", "UTF-8");
+    } else {
+        res.write(dataSourceId, "UTF-8");
+    }
+    
+    res.end();
 });
 
     

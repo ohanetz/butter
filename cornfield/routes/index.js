@@ -61,6 +61,7 @@ module.exports = function routesCtor( app, User, filter, sanitizer, stores, util
       projectJSON.publishUrl = utils.generatePublishUrl( doc.id );
       projectJSON.iframeUrl = utils.generateIframeUrl( doc.id );
       projectJSON.remixedFrom = doc.remixedFrom;
+      projectJSON.dataSourceId = doc.dataSourceId;
       res.json( projectJSON );
     });
   });

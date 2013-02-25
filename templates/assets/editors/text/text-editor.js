@@ -191,46 +191,56 @@
     
     function displayEditor( config, variablesContainer, trackEvent ) {
         
-        var variablesArray;
-        
-        $.getJSON("/loadVariables", function(variables) {
-            
-            if (variables.out == undefined) {
+        $.get("/getDataSource", function(result) {
+            if ((result == "0") || (result == "-1")) {
+                variablesContainer.innerHTML = '<span style="color: red;">Please select PIC list in order to get related variables</span>';
                 return;
-            }
-            
-            var variablesStr = variables.out;
-            if ((variablesStr != null) 
-                && (variablesStr.indexOf("[") > -1) && (variablesStr.indexOf("]") > -1 )) {
+                
+            } else {
+                        
+                var variablesArray;
 
-                variablesContainer.innerHTML = "";
+                $.getJSON("/loadVariables", function(variables) {
 
-                variablesStr = variablesStr.substring(variablesStr.indexOf("[") + 1, variablesStr.indexOf("]"));
-                if (variablesStr.length > 0) {
-                    variablesArray = variablesStr.split(", ");
-                    variablesArray.forEach(function(variable) {
-                       variableHTML = '<a id="' + variable + '_varName" href="#" draggable="true" class="butter-plugin-tile" data-butter-draggable-type="plugin">'
-                           + '<span class="butter-plugin-icon" style="background-image: url(' + config.value("variables").icon + ');">'
-                           + '</span><span class="butter-plugin-label">' + variable + '</span></a>';
-                       variablesContainer.innerHTML += variableHTML;
+                    if (variables.out == undefined) {
+                        return;
+                    }
 
-                    });
-                }
-            }
-        }).complete(function() {
-            
-            if (variablesArray === undefined) {
-                return;
-            }
-            
-            if (variablesArray != null) {
-                variablesArray.forEach(function(variable) {
-                    $("#" + variable + "_varName").click(function() {
-                        var updateOptions = {};
-                        updateOptions["variable"] = variable;
-                        trackEvent.update(updateOptions);
-                   });
-                })
+                    var variablesStr = variables.out;
+
+                    if ((variablesStr != null) 
+                        && (variablesStr.indexOf("[") > -1) && (variablesStr.indexOf("]") > -1 )) {
+
+                        variablesContainer.innerHTML = "";
+
+                        variablesStr = variablesStr.substring(variablesStr.indexOf("[") + 1, variablesStr.indexOf("]"));
+                        if (variablesStr.length > 0) {
+                            variablesArray = variablesStr.split(", ");
+                            variablesArray.forEach(function(variable) {
+                               variableHTML = '<a id="' + variable + '_varName" href="#" draggable="true" class="butter-plugin-tile" data-butter-draggable-type="plugin">'
+                                   + '<span class="butter-plugin-icon" style="background-image: url(' + config.value("variables").icon + ');">'
+                                   + '</span><span class="butter-plugin-label">' + variable + '</span></a>';
+                               variablesContainer.innerHTML += variableHTML;
+
+                            });
+                        }
+                    }
+                }).complete(function() {
+
+                    if (variablesArray === undefined) {
+                        return;
+                    }
+
+                    if (variablesArray != null) {
+                        variablesArray.forEach(function(variable) {
+                            $("#" + variable + "_varName").click(function() {
+                                var updateOptions = {};
+                                updateOptions["variable"] = variable;
+                                trackEvent.update(updateOptions);
+                           });
+                        })
+                    }
+                });
             }
         });
 

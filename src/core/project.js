@@ -11,7 +11,7 @@ define( [ "core/eventmanager", "core/media" ],
 
     var _this = this,
         _id, _name, _template, _author, _dataObject,
-        _publishUrl, _iframeUrl, _remixedFrom,
+        _publishUrl, _iframeUrl, _remixedFrom, _dataSourceId,
 
         // Whether or not a save to server is required (project data has changed)
         _isDirty = false,
@@ -136,6 +136,13 @@ define( [ "core/eventmanager", "core/media" ],
         },
         enumerable: true
       },
+      
+      "dataSourceId": {
+        get: function() {
+          return _dataSourceId;
+        },
+        enumerable: true
+      },
 
       // Have changes made it to the db and been published?
       "isSaved": {
@@ -218,6 +225,10 @@ define( [ "core/eventmanager", "core/media" ],
 
       if ( json.remixedFrom ) {
         _remixedFrom = json.remixedFrom;
+      }
+
+      if ( json.dataSourceId ) {
+        _dataSourceId = json.dataSourceId;
       }
 
       targets = json.targets;
@@ -318,7 +329,8 @@ define( [ "core/eventmanager", "core/media" ],
         template: _template,
         author: _author,
         data: _this.data,
-        remixedFrom: _remixedFrom
+        remixedFrom: _remixedFrom,
+        dataSourceId: _dataSourceId
       });
 
       // Save to local storage first in case network is down.
