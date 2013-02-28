@@ -37,11 +37,17 @@ define([ "dialog/dialog", "util/lang", "text!layouts/header.html", "ui/user-data
     ToolTip.apply( _projectTitle );
 
     function saveProject() {
-        $.get("/setDataSource", {dataSource: _dataSourcesList.options[_dataSourcesList.selectedIndex].value}, function() {
+        if (_dataSourcesList.options.length > 0) {
+            $.get("/setDataSource", {dataSource: _dataSourcesList.options[_dataSourcesList.selectedIndex].value}, function() {
 
-        }).complete(function() {
+            }).complete(function() {
+                prepare();
+            });
+        
+        } else {
+            // Not using datasources.
             prepare();
-        });
+        }
 //      if ( !butter.cornfield.authenticated() ) {
 //        _userData.authenticationRequired();
 //      }
