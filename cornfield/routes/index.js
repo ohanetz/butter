@@ -65,8 +65,50 @@ module.exports = function routesCtor( app, User, filter, sanitizer, stores, util
       res.json( projectJSON );
     });
   });
-
+  
   app.post( '/api/delete/:id?',
+    filter.isLoggedIn, filter.isStorageAvailable,
+    function( req, res ) {
+
+    var id = parseInt( req.params.id, 10 );
+
+    if ( isNaN( id ) ) {
+      res.json( { error: "ID was not a number" }, 500 );
+      return;
+    }
+    
+    var email = req.session.email;
+    if (!email) {
+        // Default Email
+        email = "Anonymous";
+    }
+
+    User.deleteProject( email, req.params.id, function( err, imagesToDestroy ) {
+      if ( err ) {
+        res.json( { error: 'project not found' }, 404 );
+        return;
+      }
+
+      // Delete published projects, too
+      var embedShell = utils.generateIdString( id ),
+          embedDoc = embedShell + utils.constants().EMBED_SUFFIX;
+
+      // If we can't delete the file, it's already gone, ignore errors.
+      // Fire-and-forget.
+      stores.publish.remove( embedShell );
+      stores.publish.remove( embedDoc );
+
+      if ( imagesToDestroy ) {
+        imagesToDestroy.forEach( function( imageReference ) {
+          stores.images.remove( imageReference.filename );
+        });
+      }
+
+      res.json( { error: 'okay' }, 200 );
+    });
+  });
+
+  app.get( '/api/delete/:id?',
     filter.isLoggedIn, filter.isStorageAvailable,
     function( req, res ) {
 

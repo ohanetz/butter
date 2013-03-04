@@ -14,12 +14,12 @@ module.exports = function( config, dbReadyFn ) {
 
   dbReadyFn = dbReadyFn || defaultDBReadyFunction;
 
-  var username = config.username || "";
-  var password = config.password || "";
+  var username = config.database.username || "";
+  var password = config.database.password || "";
 
   var dbOnline = false,
       Sequelize = require( "sequelize" ),
-      sequelize = new Sequelize( config.database, username, password, config.options ),
+      sequelize = new Sequelize( config.database.database, username, password, config.database.options ),
       Project = sequelize.import( __dirname + "/models/project" ),
       ImageReference = sequelize.import( __dirname + "/models/image" ),
       versions;
@@ -112,7 +112,26 @@ module.exports = function( config, dbReadyFn ) {
         dataSourceId: dataSourceId
       });
 
-      project.save().complete( callback );
+      project.save().complete( callback ).success(function() {
+          try {
+
+              var soap = require('soap');
+              var url = config.wsdl.dataExternalization;
+              var args = {
+                  customerName: email,
+                  videoName: project.name,
+                  videoId: parseInt(project.id)
+              };
+              soap.createClient(url, function(err, client) {
+                  //console.log(client.describe());
+                  client.DataExternalization.DataExternalizationSOAP.addVideo(args, function(err, result) {
+                      console.log("PIC - Add Video: " + result.out);
+                  });
+              });
+          } catch (err) {
+              console.log("Unable to add video to PIC. WebService Warning! " + err);
+          }
+      });
     },
 
     deleteProject: function( email, pid, callback ) {
@@ -136,6 +155,24 @@ module.exports = function( config, dbReadyFn ) {
             });
 
           });
+          
+          try {
+
+              var soap = require('soap');
+              var url = config.wsdl.dataExternalization;
+              var args = {
+                  customerName: email,
+                  videoId: parseInt(project.id)
+              };
+              soap.createClient(url, function(err, client) {
+                  //console.log(client.describe());
+                  client.DataExternalization.DataExternalizationSOAP.deleteVideo(args, function(err, result) {
+                      console.log("PIC - Delete Video: " + result.out);
+                  });
+              });
+          } catch (err) {
+              console.log("Unable to add video to PIC. WebService Warning! " + err);
+          }
 
         } else {
           callback( "the project has already been deleted" );
@@ -222,7 +259,28 @@ module.exports = function( config, dbReadyFn ) {
             });
 
             callback( null, projectUpdateResult, imagesToDestroy );
+            
           });
+          
+          try {
+
+              var soap = require('soap');
+              var url = config.wsdl.dataExternalization;
+              var args = {
+                  customerName: email,
+                  videoId: parseInt(project.id),
+                  videoNewName: project.name
+              };
+              soap.createClient(url, function(err, client) {
+                  //console.log(client.describe());
+                  client.DataExternalization.DataExternalizationSOAP.renameVideo(args, function(err, result) {
+                      console.log("PIC - Rename Video: " + result.out);
+                  });
+              });
+          } catch (err) {
+              console.log("Unable to add video to PIC. WebService Warning! " + err);
+          }
+          
         });
       })
       .error(function( error ) {

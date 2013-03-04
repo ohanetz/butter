@@ -106,6 +106,87 @@
       		</xsd:sequence>
       	</xsd:complexType>
       </xsd:element>
+      <xsd:element name="addVideo">
+      	<xsd:complexType>
+      		<xsd:sequence>
+
+      			<xsd:element name="customerName" type="xsd:string"></xsd:element>
+      			<xsd:element name="videoName" type="xsd:string"></xsd:element>
+      			<xsd:element name="videoId" type="xsd:int"></xsd:element>
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
+      <xsd:element name="addVideoResponse">
+      	<xsd:complexType>
+      		<xsd:sequence>
+
+      			<xsd:element name="out" type="xsd:string"></xsd:element>
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
+      <xsd:element name="addVideoFault">
+      	<xsd:complexType>
+      		<xsd:sequence>
+
+      			<xsd:element name="addVideoFault" type="xsd:string"></xsd:element>
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
+      <xsd:element name="renameVideo">
+      	<xsd:complexType>
+      		<xsd:sequence>
+
+      			<xsd:element name="customerName" type="xsd:string"></xsd:element>
+      			<xsd:element name="videoId" type="xsd:int"></xsd:element>
+      			<xsd:element name="videoNewName" type="xsd:string"></xsd:element>
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
+      <xsd:element name="renameVideoResponse">
+      	<xsd:complexType>
+      		<xsd:sequence>
+
+      			<xsd:element name="out" type="xsd:string"></xsd:element>
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
+      <xsd:element name="deleteVideo">
+      	<xsd:complexType>
+      		<xsd:sequence>
+
+      			<xsd:element name="customerName" type="xsd:string"></xsd:element>
+      			<xsd:element name="videoId" type="xsd:int"></xsd:element>
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
+      <xsd:element name="deleteVideoResponse">
+      	<xsd:complexType>
+      		<xsd:sequence>
+
+      			<xsd:element name="out" type="xsd:string"></xsd:element>
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
+      <xsd:element name="renameVideoFault">
+      	<xsd:complexType>
+      		<xsd:sequence>
+
+      			<xsd:element name="renameVideoFault"
+      				type="xsd:string">
+      			</xsd:element>
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
+      <xsd:element name="deleteVideoFault">
+      	<xsd:complexType>
+      		<xsd:sequence>
+
+      			<xsd:element name="deleteVideoFault"
+      				type="xsd:string">
+      			</xsd:element>
+      		</xsd:sequence>
+      	</xsd:complexType>
+      </xsd:element>
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="getCustomerVariablesRequest">
@@ -144,6 +225,33 @@
   <wsdl:message name="getCustomerVariablesForDataSourceFault">
   	<wsdl:part name="parameters" element="tns:getCustomerVariablesForDataSourceFault"></wsdl:part>
   </wsdl:message>
+  <wsdl:message name="addVideoRequest">
+  	<wsdl:part name="parameters" element="tns:addVideo"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addVideoResponse">
+  	<wsdl:part name="parameters" element="tns:addVideoResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addVideoFault">
+  	<wsdl:part name="parameters" element="tns:addVideoFault"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="renameVideoRequest">
+  	<wsdl:part name="parameters" element="tns:renameVideo"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="renameVideoResponse">
+  	<wsdl:part name="parameters" element="tns:renameVideoResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteVideoRequest">
+  	<wsdl:part name="parameters" element="tns:deleteVideo"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteVideoResponse">
+  	<wsdl:part name="parameters" element="tns:deleteVideoResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="renameVideoFault">
+  	<wsdl:part name="parameters" element="tns:renameVideoFault"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteVideoFault">
+  	<wsdl:part name="parameters" element="tns:deleteVideoFault"></wsdl:part>
+  </wsdl:message>
   <wsdl:portType name="DataExternalization">
     <wsdl:operation name="getCustomerVariables">
       <wsdl:input message="tns:getCustomerVariablesRequest"/>
@@ -164,6 +272,21 @@
     	<wsdl:input message="tns:getCustomerVariablesForDataSourceRequest"></wsdl:input>
     	<wsdl:output message="tns:getCustomerVariablesForDataSourceResponse"></wsdl:output>
             <wsdl:fault name="fault" message="tns:getCustomerVariablesForDataSourceFault"></wsdl:fault>
+        </wsdl:operation>
+    <wsdl:operation name="addVideo">
+    	<wsdl:input message="tns:addVideoRequest"></wsdl:input>
+    	<wsdl:output message="tns:addVideoResponse"></wsdl:output>
+            <wsdl:fault name="fault" message="tns:addVideoFault"></wsdl:fault>
+        </wsdl:operation>
+    <wsdl:operation name="renameVideo">
+    	<wsdl:input message="tns:renameVideoRequest"></wsdl:input>
+    	<wsdl:output message="tns:renameVideoResponse"></wsdl:output>
+            <wsdl:fault name="fault" message="tns:renameVideoFault"></wsdl:fault>
+        </wsdl:operation>
+    <wsdl:operation name="deleteVideo">
+    	<wsdl:input message="tns:deleteVideoRequest"></wsdl:input>
+    	<wsdl:output message="tns:deleteVideoResponse"></wsdl:output>
+            <wsdl:fault name="fault" message="tns:deleteVideoFault"></wsdl:fault>
         </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="DataExternalizationSOAP" type="tns:DataExternalization">
