@@ -127,7 +127,7 @@ define( [ "util/xhr" ],
     };
 
     function publishPlaceholder( id, callback ) {
-      console.warn( "Warning: Popcorn Maker publish is already in progress. Ignoring request." );
+      console.warn( "Warning: Publish is already in progress. Ignoring request." );
       callback( { error: "Publish is already in progress. Ignoring request." } );
     }
 
@@ -177,7 +177,7 @@ define( [ "util/xhr" ],
     };
 
     function savePlaceholder( id, data, callback ) {
-      console.warn( "Warning: Popcorn Maker save is already in progress. Ignoring request." );
+      console.warn( "Warning: Save is already in progress. Ignoring request." );
       callback( { error: "Save is already in progress. Ignoring request." } );
     }
 

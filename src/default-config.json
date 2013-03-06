@@ -6,7 +6,7 @@
   "snapshotHTMLOnReady": false,
   "scrapePage": true,
   "backupInterval": 0,
-  "title": "Popcorn Maker",
+  "title": "Video Editing",
   "ui": {
     "enabled": true,
     "onLeaveDialog": true,

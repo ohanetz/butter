@@ -305,7 +305,7 @@ define( [ "core/eventmanager", "core/media" ],
         // Purge the saved project, since it won't be complete.
         __butterStorage.removeItem( "butter-backup-project" );
 
-        console.warn( "Warning: Popcorn Maker LocalStorage quota exceeded. Stopping automatic backup. Will be restarted when project changes again." );
+        console.warn( "Warning: LocalStorage quota exceeded. Stopping automatic backup. Will be restarted when project changes again." );
       }
     };
 

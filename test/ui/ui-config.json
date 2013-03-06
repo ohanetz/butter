@@ -4,7 +4,7 @@
   "cssRenderClientSide": false,
   "snapshotHTMLOnReady": false,
   "scrapePage": true,
-  "title": "Popcorn Maker",
+  "title": "Video Editing",
   "ui": {
     "enabled": true,
     "onLeaveDialog": true,

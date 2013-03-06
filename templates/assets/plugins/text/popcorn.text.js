@@ -32,7 +32,7 @@
         text: {
           elem: "textarea",
           label: "Text",
-          "default": "Popcorn Maker"
+          "default": "Your Text Here"
         },
         linkUrl: {
           elem: "input",
